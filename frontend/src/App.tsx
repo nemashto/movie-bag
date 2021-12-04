@@ -1,5 +1,8 @@
 import React, { Switch, Route, Link } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
+import { MovieList } from "./components/MovieList";
+import { AddMovie } from "./components/AddMovie";
+import { Movie } from "./components/Movie";
 
 function App() {
   return (
@@ -10,16 +13,24 @@ function App() {
         </a>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
-            movies
+            <Link to={'/movies'} className='nav-link'>
+              movies
+            </Link>
           </li>
           <li className="nav-item">
-            add
+            <Link to={'/add'} className='nav-link'>
+              add
+            </Link>
           </li>
         </div>
       </nav>
 
       <div className="container mt-3">
-        
+        <Switch>
+          <Route exact path={['/', '/movies']} component={ MovieList } />
+          <Route exact path='/add' component={ AddMovie } />
+          <Route exact path='/movies/:id' component={Movie} />
+        </Switch>
       </div>
     </div>
   )
