@@ -1,4 +1,5 @@
-import React, { Switch, Route, Link } from "react-router-dom"
+import React from "react";
+import { Switch, Route, Link } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
 import { MovieList } from "./components/MovieList";
 import { AddMovie } from "./components/AddMovie";
