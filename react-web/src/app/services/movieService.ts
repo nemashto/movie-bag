@@ -1,4 +1,4 @@
-import http from "../http-common"
+import http from "../../http-common"
 import IMovieData from "../types/Movie"
 
 const getAll = () => {
@@ -29,7 +29,7 @@ const findByTitle = (title: string  ) => {
     return http.get<Array<IMovieData>>(`/movies?title=${title}`)
 }
 
-const MovieServices = {
+const MovieDataService = {
     getAll,
     get,
     create,
@@ -39,4 +39,4 @@ const MovieServices = {
     findByTitle
 }
 
-export default MovieServices
+export default MovieDataService
