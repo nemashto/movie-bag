@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getMovies, selectMovie } from "../app/slices/moviesSlicer";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { getMovies, selectMovie } from "../../state/movies/moviesSlicer";
 
 
 export const MovieList = () => {

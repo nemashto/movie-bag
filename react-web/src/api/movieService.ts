@@ -1,5 +1,5 @@
-import http from "../../http-common"
-import IMovieData from "../types/Movie"
+import http from "../http-common"
+import IMovieData from "../common/types/Movie"
 
 const getAll = () => {
     return http.get<Array<IMovieData>>("/movies")

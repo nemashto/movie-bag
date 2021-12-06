@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
-import MovieDataService from "../services/movieService"
+import MovieDataService from "../../api/movieService"
 import { RootState } from "../store"
-import IMovieData from "../types/Movie"
+import IMovieData from "../../common/types/Movie"
 
 export interface MovieState {
     movies: IMovieData[],
