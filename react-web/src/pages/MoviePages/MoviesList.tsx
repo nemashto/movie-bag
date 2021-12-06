@@ -13,9 +13,9 @@ export const MovieList = () => {
     },[dispatch])
 
     return (
-        <main className="container">
-            <div className="p-4 p-md-5 mb-4 text-dark rounded bg-white">
-                <div className="col-md-6 px-0">
+        <div>
+            <div className="p-4 p-md-3 mb-4 text-dark rounded bg-white">
+                <div className="col-md-3 px-0">
                     <h1 className="display-4 fst-italic">My Movies</h1>
                 </div>
             </div>
@@ -31,6 +31,6 @@ export const MovieList = () => {
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     )
 }
