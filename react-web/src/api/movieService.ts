@@ -1,5 +1,5 @@
 import http from "../http-common"
-import IMovieData from "../common/types/Movie"
+import {IMovieData, IMovieInputData} from "../common/types/Movie"
 
 const getAll = () => {
     return http.get<Array<IMovieData>>("/movies")
@@ -9,8 +9,8 @@ const get = (id: string) => {
     return http.get<Array<IMovieData>>(`/movies/${id}`)
 }
 
-const create = (data: IMovieData) => {
-    return http.post<Array<IMovieData>>("/movies", data)
+const create = (data: IMovieInputData) => {
+    return http.post<Array<IMovieInputData>>("/movies", data)
 }
 
 const update = (id: string, data: IMovieData) => {

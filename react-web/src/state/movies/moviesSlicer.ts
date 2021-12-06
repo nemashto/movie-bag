@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import MovieDataService from "../../api/movieService"
 import { RootState } from "../store"
-import IMovieData from "../../common/types/Movie"
+import {IMovieData, IMovieInputData} from "../../common/types/Movie"
 
 export interface MovieState {
     movies: IMovieData[],
@@ -21,6 +21,14 @@ export const getMovies = createAsyncThunk(
     }
 )
 
+export const createMovie = createAsyncThunk(
+    "movies/create",
+    async ( data: IMovieInputData) => { 
+      const res = await MovieDataService.create(data);
+      return res.data;
+    }
+  )
+
 const movieSlice = createSlice({
     name: 'movie',
     initialState,
@@ -30,6 +38,9 @@ const movieSlice = createSlice({
             .addCase(getMovies.fulfilled, (state, action: PayloadAction<IMovieData[]>) => {
                 state.status = 'idle'
                 state.movies = action.payload       
+            })
+            .addCase(createMovie.fulfilled, (state, action) => {
+
             })
     }
 })

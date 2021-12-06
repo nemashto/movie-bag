@@ -25,7 +25,9 @@ export const MovieList = () => {
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
                     {movies.movies &&
                         movies.movies.map((movie, index) => (
-                            <Movie key={index} {...movie} />
+                            <div key={index} className="col-md-6">
+                                <Movie  {...movie} />
+                            </div>
                         ))
                     }
                     </div>
