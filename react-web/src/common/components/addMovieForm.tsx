@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
     Formik,
-    FormikHelpers,
-    FormikProps,
     Form,
     Field,
     FieldArray,
-    FieldProps,
 } from "formik"
 import { IMovieInputData } from "../types/Movie";
 import { createMovie } from "../../state/movies/moviesSlicer";
 import { useAppDispatch} from "../../state/hooks";
+import { bindActionCreators } from "redux";
 
 export const AddMovieForm = () => {
+    const [submitted, setSubmitted] = useState(false)
+
     const dispatch = useAppDispatch()
 
     const initialValues: IMovieInputData = {
@@ -23,22 +23,46 @@ export const AddMovieForm = () => {
 
     const saveMovie = (values: IMovieInputData) => {
         dispatch(createMovie(values))
+        setSubmitted(true)
+    }
+
+    const validate = (value: string) =>{
+        let error: string
+        error = ''
+        if (!value) {
+            error = "required"
+        }
+        return error
+    }
+
+    const newForm = () => {
+        setSubmitted(false)
     }
 
     return(
-    <div>
+    <div className="submit-form">
+        {submitted ? (
+          <div>
+            <h4>You submitted successfully!</h4>
+            <button className="btn btn-success" onClick={newForm}>
+              Add
+            </button>
+          </div>
+        ) : (
         <Formik
                 initialValues={initialValues}
-                onSubmit={(values) => {
+                onSubmit={(values, actions) => {
                     saveMovie(values)
+                    actions.resetForm()
                 }}
             >
-            {({ values }) => (
+            {({ values, errors, touched }) => (
                     <Form>
                         <div className="row g-3">
                             <div className="">
                                 <label className="form-label my-2" htmlFor="name">movie name</label>
-                                <Field className="form-control" id="name" name="name" placeholder="movie name" />
+                                <Field className="form-control" validate={validate} id="name" name="name" placeholder="movie name" />
+                                {errors.name && touched.name && <div className="text-danger">{errors.name}</div>}
 
                                 <label className="form-label my-2" htmlFor="genres">genres</label>
                                 <FieldArray 
@@ -65,8 +89,10 @@ export const AddMovieForm = () => {
                                             
                                             }
                                         </div>
+                                        
                                     )}
                                 />
+                                
 
                                 <label className="form-label my-2" htmlFor="casts">casts</label>
                                 <FieldArray 
@@ -76,7 +102,7 @@ export const AddMovieForm = () => {
                                             {values.casts && values.casts.length > 0 ? (
                                                 values.casts.map((cast, index) => (
                                                     <div key={index} className="input-group  ">
-                                                        <Field name={`casts.${index}`} className="form-control" />
+                                                        <Field name={`casts.${index}`} className="form-control" validate={validate} />
                                                         <button type="button" className="btn input-group-text" onClick={() => castsHelpers.remove(index)}>
                                                             -
                                                         </button>
@@ -104,6 +130,7 @@ export const AddMovieForm = () => {
                     </Form>
                 )}
         </Formik>
+        )}
         </div>
     )
 }
