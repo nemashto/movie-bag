@@ -6,25 +6,11 @@ import {
     FieldArray,
 } from "formik"
 import { IMovieInputData } from "../types/Movie";
-import { createMovie } from "../../state/movies/moviesSlicer";
-import { useAppDispatch} from "../../state/hooks";
-import { bindActionCreators } from "redux";
 
-export const AddMovieForm = () => {
+export const AddMovieForm = (initialValues: IMovieInputData , saveMovie: Function) => {
     const [submitted, setSubmitted] = useState(false)
 
-    const dispatch = useAppDispatch()
 
-    const initialValues: IMovieInputData = {
-        name: '',
-        genres: [],
-        casts: [],
-    }
-
-    const saveMovie = (values: IMovieInputData) => {
-        dispatch(createMovie(values))
-        setSubmitted(true)
-    }
 
     const validate = (value: string) =>{
         let error: string
@@ -53,6 +39,7 @@ export const AddMovieForm = () => {
                 initialValues={initialValues}
                 onSubmit={(values, actions) => {
                     saveMovie(values)
+                    setSubmitted(true)
                     actions.resetForm()
                 }}
             >
