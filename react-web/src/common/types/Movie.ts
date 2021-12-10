@@ -1,5 +1,5 @@
 export interface IMovieData {
-    id: string,
+    _id: object,
     name: string,
     casts: string[],
     genres: string[],
