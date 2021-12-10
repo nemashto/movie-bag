@@ -3,20 +3,37 @@ import MovieDataService from "../../api/movieService"
 import { RootState } from "../store"
 import {IMovieData, IMovieInputData} from "../../common/types/Movie"
 
-export interface MovieState {
-    movies: IMovieData[],
+export interface MoviesState {
+    movies: IMovieData[]
+    movie: IMovieData
     status: 'idle' | 'loading' | 'failed'
+    error: string | undefined | null
 }
 
-const initialState: MovieState = {
+const initialState: MoviesState = {
     movies: [],
-    status: 'idle'
+    movie: {
+        _id: {},
+        name: '',
+        casts: [],
+        genres: [],
+    },
+    status: 'idle',
+    error: null,
 }
 
 export const getMovies = createAsyncThunk(
     "movies/get",
     async() => {
         const response = await MovieDataService.getAll()
+        return response.data
+    }
+)
+
+export const getMovie = createAsyncThunk(
+    "movies/get/id",
+    async(id: string) => {
+        const response = await MovieDataService.get(id)
         return response.data
     }
 )
@@ -29,8 +46,8 @@ export const createMovie = createAsyncThunk(
     }
   )
 
-const movieSlice = createSlice({
-    name: 'movie',
+const moviesSlice = createSlice({
+    name: 'movies',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
@@ -42,9 +59,14 @@ const movieSlice = createSlice({
             .addCase(createMovie.fulfilled, (state, action) => {
 
             })
+            .addCase(getMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
+                state.status = 'idle'
+                state.movie = action.payload       
+            })
     }
 })
 
-export const selectMovie = (state: RootState) => state.movies
+export const selectMovies = (state: RootState) => state.movies.movies
+export const selectMovie = (state: RootState) => state.movies.movie
 
-export default movieSlice.reducer
+export default moviesSlice.reducer

@@ -6,7 +6,7 @@ const getAll = () => {
 }
 
 const get = (id: string) => {
-    return http.get<Array<IMovieData>>(`/movies/${id}`)
+    return http.get<IMovieData>(`/movies/${id}`)
 }
 
 const create = (data: IMovieInputData) => {

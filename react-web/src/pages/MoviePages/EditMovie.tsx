@@ -2,10 +2,10 @@ import React, {useEffect} from "react"
 import { AddMovieForm } from "../../common/components/addMovieForm"
 import { IMovieData } from "../../common/types/Movie"
 import { useAppDispatch, useAppSelector } from "../../state/hooks"
-import { createMovie, getMovies, selectMovie } from "../../state/movies/moviesSlicer"
+import { createMovie, getMovies, selectMovies } from "../../state/movies/moviesSlicer"
 
 export const EditMovie = (id: string) => {
-    const movies = useAppSelector(selectMovie)
+    const movies = useAppSelector(selectMovies)
     const dispatch = useAppDispatch()
 
     useEffect(() => {

@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
 import { Movie } from "../../common/components/movie";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { getMovies, selectMovie } from "../../state/movies/moviesSlicer";
+import { getMovies, selectMovies } from "../../state/movies/moviesSlicer";
 
 
 export const MovieList = () => {
-    const movies = useAppSelector(selectMovie)
+    const movies = useAppSelector(selectMovies)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -23,8 +23,8 @@ export const MovieList = () => {
             <div className="album py-5 bg-white">
                 <div className="container">
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
-                    {movies.movies &&
-                        movies.movies.map((movie, index) => (
+                    {movies &&
+                        movies.map((movie, index) => (
                             <div key={index} className="col-md-6">
                                 <Movie  {...movie} />
                             </div>
