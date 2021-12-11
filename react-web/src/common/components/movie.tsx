@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {IMovieData} from "../types/Movie";
-import { BiWrench, BiX } from "react-icons/bi"
 
 
 export const Movie = (movie: IMovieData) => {
@@ -13,10 +12,6 @@ export const Movie = (movie: IMovieData) => {
                 <div className="mb-1 text-muted">{movie.genres.map((genre, index) => (<b key={index}> {genre} / </b>))}</div>
                 <div className="card-text mb-auto">{movie.casts.map((actor, index) => (<i key={index}>{actor}, </i>))}</div>
                 <Link to={"/movies/" + id} className="stretched-link">detail..</Link>
-                <div>
-                    <BiWrench />
-                    <BiX className="text-danger"/>
-                </div>
             </div>
         </div>
     )

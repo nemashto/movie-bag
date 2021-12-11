@@ -61,6 +61,14 @@ export const editMovie = createAsyncThunk(
     }
   )
 
+  export const deleteMovie = createAsyncThunk(
+    "movies/delete",
+    async(id: string) => {
+        const response = await MovieDataService.remove(id)
+        return response.data
+    }
+)
+
 const moviesSlice = createSlice({
     name: 'movies',
     initialState,
@@ -79,6 +87,9 @@ const moviesSlice = createSlice({
                 state.movie = action.payload       
             })
             .addCase(editMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
+
+            })
+            .addCase(deleteMovie.fulfilled, (state, action) => {
 
             })
     }
