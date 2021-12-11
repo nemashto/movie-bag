@@ -6,6 +6,7 @@ import { Footer } from './common/components/footer';
 import { Route, Switch } from 'react-router';
 import { AddMovie } from './pages/MoviePages/AddMovie';
 import { DetailMovie } from './pages/MoviePages/DetailMovie';
+import { EditMovie } from './pages/MoviePages/EditMovie';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route exact path={["/", "/movies"]} component={MovieList} />
           <Route exact path="/movies/add" component={AddMovie} />
           <Route exact path="/movies/:id" component={DetailMovie} />
+          <Route exact path="/movies/edit/:id" component={EditMovie} />
         </Switch>
       </main>
       <Footer />

@@ -10,11 +10,11 @@ const get = (id: string) => {
 }
 
 const create = (data: IMovieInputData) => {
-    return http.post<Array<IMovieInputData>>("/movies", data)
+    return http.post<IMovieInputData>("/movies", data)
 }
 
-const update = (id: string, data: IMovieData) => {
-    return http.put<Array<IMovieData>>(`/movies/${id}`, data)
+const update = (id: string, data: IMovieInputData) => {
+    return http.put<IMovieData>(`/movies/${id}`, data)
 }
 
 const remove = (id: string) => {

@@ -5,11 +5,11 @@ import {
     Field,
     FieldArray,
 } from "formik"
-import { IMovieInputData } from "../types/Movie";
+import { IMovieData } from "../types/Movie";
 import { useAppDispatch } from "../../state/hooks";
-import { createMovie } from "../../state/movies/moviesSlicer";
+import { editMovie } from "../../state/movies/moviesSlicer";
 
-export const AddMovieForm = (initialValues: IMovieInputData) => {
+export const EditMovieForm = (initialValues: IMovieData) => {
     const [submitted, setSubmitted] = useState(false)
     const dispatch = useAppDispatch()
 
@@ -26,8 +26,8 @@ export const AddMovieForm = (initialValues: IMovieInputData) => {
         setSubmitted(false)
     }
 
-    const saveMovie = (value: IMovieInputData ) => {
-        dispatch(createMovie(value))
+    const saveMovie = (value: IMovieData ) => {
+        dispatch(editMovie(value))
     }
 
     return(

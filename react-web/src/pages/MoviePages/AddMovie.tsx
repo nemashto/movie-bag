@@ -1,20 +1,14 @@
 import React from "react"
 import { AddMovieForm } from "../../common/components/addMovieForm"
 import { IMovieInputData } from "../../common/types/Movie";
-import { createMovie } from "../../state/movies/moviesSlicer";
-import { useAppDispatch} from "../../state/hooks";
+
 
 export const AddMovie = () => {
-    const dispatch = useAppDispatch()
 
     const initialValues: IMovieInputData = {
         name: '',
         genres: [],
         casts: [],
-    }
-
-    const saveMovie = (values: IMovieInputData) => {
-        dispatch(createMovie(values))
     }
 
     return (
@@ -25,7 +19,7 @@ export const AddMovie = () => {
                     <p className="lead">Please fill your movie to this form.</p>
                 </div>
             </div>
-            <AddMovieForm {...initialValues} {...saveMovie} />
+            <AddMovieForm {...initialValues} />
          </div>
     )
 }

@@ -3,6 +3,7 @@ import MovieDataService from "../../api/movieService"
 import { RootState } from "../store"
 import {IMovieData, IMovieInputData} from "../../common/types/Movie"
 
+
 export interface MoviesState {
     movies: IMovieData[]
     movie: IMovieData
@@ -46,6 +47,20 @@ export const createMovie = createAsyncThunk(
     }
   )
 
+export const editMovie = createAsyncThunk(
+    "movies/edit",
+    async (movie: IMovieData) => { 
+        const id: string = String(Array(Object.values(movie._id))[0])
+        let data: IMovieInputData = {
+            name: movie.name,
+            genres: movie.genres,
+            casts: movie.casts,
+        } 
+        const res = await MovieDataService.update(id, data);
+        return res.data;
+    }
+  )
+
 const moviesSlice = createSlice({
     name: 'movies',
     initialState,
@@ -62,6 +77,9 @@ const moviesSlice = createSlice({
             .addCase(getMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
                 state.status = 'idle'
                 state.movie = action.payload       
+            })
+            .addCase(editMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
+
             })
     }
 })
