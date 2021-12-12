@@ -1,11 +1,12 @@
 import React, {useEffect} from "react";
 import { Movie } from "../../common/components/movie";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { getMovies, selectMovies } from "../../state/movies/moviesSlicer";
+import { getMovies, selectError, selectMovies } from "../../state/movies/moviesSlicer";
 
 
 export const MovieList = () => {
     const movies = useAppSelector(selectMovies)
+    const error = useAppSelector(selectError)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -14,6 +15,10 @@ export const MovieList = () => {
 
     return (
         <div>
+            {error && <div className="alert alert-danger" role="alert">
+                    Something is wrong. Please try it again later.
+                </div>
+            }
             <div className="p-4 p-md-3 mb-4 text-dark rounded bg-white">
                 <div className="col-md-3 px-0">
                     <h1 className="display-4 fst-italic">My Movies</h1>

@@ -7,8 +7,7 @@ import {IMovieData, IMovieInputData} from "../../common/types/Movie"
 export interface MoviesState {
     movies: IMovieData[]
     movie: IMovieData
-    status: 'idle' | 'loading' | 'failed'
-    error: string | undefined | null
+    error: string | undefined
 }
 
 const initialState: MoviesState = {
@@ -19,9 +18,8 @@ const initialState: MoviesState = {
         casts: [],
         genres: [],
     },
-    status: 'idle',
-    error: null,
-}
+    error: '',
+} 
 
 export const getMovies = createAsyncThunk(
     "movies/get",
@@ -76,26 +74,35 @@ const moviesSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getMovies.fulfilled, (state, action: PayloadAction<IMovieData[]>) => {
-                state.status = 'idle'
-                state.movies = action.payload       
+                state.movies = action.payload
+                state.error = ''          
             })
-            .addCase(createMovie.fulfilled, (state, action) => {
+            .addCase(getMovies.rejected, (state, action) => {
+                state.error = action.error.message
+            })
 
+            .addCase(createMovie.fulfilled, (state, action) => {
+                state.error = ''
             })
+            .addCase(createMovie.rejected, (state, action) => {
+                state.error = action.error.message
+            })
+
             .addCase(getMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
-                state.status = 'idle'
-                state.movie = action.payload       
+                state.movie = action.payload 
+                state.error = ''       
             })
             .addCase(editMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
-
+                state.error = ''
             })
             .addCase(deleteMovie.fulfilled, (state, action) => {
-
+                state.error = ''
             })
     }
 })
 
 export const selectMovies = (state: RootState) => state.movies.movies
 export const selectMovie = (state: RootState) => state.movies.movie
+export const selectError= (state: RootState) => state.movies.error
 
 export default moviesSlice.reducer

@@ -6,11 +6,12 @@ import {
     FieldArray,
 } from "formik"
 import { IMovieInputData } from "../types/Movie";
-import { useAppDispatch } from "../../state/hooks";
-import { createMovie } from "../../state/movies/moviesSlicer";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { createMovie, selectError } from "../../state/movies/moviesSlicer";
 
 export const AddMovieForm = (initialValues: IMovieInputData) => {
     const [submitted, setSubmitted] = useState(false)
+    const error = useAppSelector(selectError)
     const dispatch = useAppDispatch()
 
     const validate = (value: string) =>{
@@ -32,14 +33,19 @@ export const AddMovieForm = (initialValues: IMovieInputData) => {
 
     return(
     <div className="submit-form">
-        {submitted ? (
+        {submitted &&
           <div>
-            <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={newForm}>
-              Add
-            </button>
+            {error ? (
+                <div className="alert alert-danger" role="alert">
+                <h4>Something was wrong - try it again</h4>
+                </div>
+            ):(
+                <div className="alert alert-success" role="alert">
+                    <h4>You submitted successfully!</h4>
+                </div>
+            )}
           </div>
-        ) : (
+        }
         <Formik
                 initialValues={initialValues}
                 onSubmit={(values, actions) => {
@@ -122,7 +128,6 @@ export const AddMovieForm = (initialValues: IMovieInputData) => {
                     </Form>
                 )}
         </Formik>
-        )}
         </div>
     )
 }
