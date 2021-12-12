@@ -2,26 +2,34 @@ import React, {useEffect} from "react";
 import { Movie } from "../../common/components/movie";
 import { IMovieData } from "../../common/types/Movie";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { getMovies, selectError, selectFilteredMovies, selectMovies } from "../../state/movies/moviesSlicer";
+import { getMovies, movieFilter, movieOrder, selectError, selectFilteredMovies, selectMovies } from "../../state/movies/moviesSlicer";
 
 
 export const MovieList = () => {
-    const movies_store = useAppSelector(selectMovies)
-    const filtered_store = useAppSelector(selectFilteredMovies)
+    const moviesStore = useAppSelector(selectMovies)
+    const filteredStore = useAppSelector(selectFilteredMovies)
     const error = useAppSelector(selectError)
     const dispatch = useAppDispatch()
-    var movies:IMovieData[] = []
+    var movies : IMovieData[] = []
 
     useEffect(() => {
         dispatch(getMovies())
     },[dispatch])
 
-    if (filtered_store.length > 0) {
-        movies = filtered_store
-    } else {
-        movies = movies_store
-    }
+      // movie list order
+      const sortByOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value
+        const direction = value.endsWith('asc') ? 'asc' : 'desc'
 
+        dispatch(movieOrder(direction))
+      }
+
+      if (filteredStore) {
+          movies = filteredStore
+      } else {
+          movies = moviesStore
+      }
+      
     return (
         <div>
             {error && <div className="alert alert-danger" role="alert">
@@ -35,6 +43,15 @@ export const MovieList = () => {
             </div>
 
             <div className="album py-5 bg-white">
+                <div className="container">
+                    <div className="mb-3">
+                        <select className="custom-select" onChange={(e) => sortByOrder(e)}>
+                            <option value="" disabled selected>Sort by</option>
+                            <option value='alphabet_desc'>name A-Z</option>
+                            <option value='alphabet_asc'>name Z-A</option>
+                        </select>
+                    </div>
+                </div>
                 <div className="container">
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
                     {movies &&

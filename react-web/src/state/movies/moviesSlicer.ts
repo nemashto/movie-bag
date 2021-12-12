@@ -6,14 +6,14 @@ import {IMovieData, IMovieInputData} from "../../common/types/Movie"
 
 export interface MoviesState {
     movies: IMovieData[]
-    filteredMovies: IMovieData[]
+    filteredMovies: IMovieData[] | undefined
     movie: IMovieData
     error: string | undefined
 }
 
 const initialState: MoviesState = {
     movies: [],
-    filteredMovies: [],
+    filteredMovies: undefined,
     movie: {
         _id: {},
         name: '',
@@ -22,6 +22,24 @@ const initialState: MoviesState = {
     },
     error: '',
 } 
+
+const asc = (a: IMovieData, b: IMovieData) => {
+    const fa = a.name.toLowerCase()
+    const fb = b.name.toLowerCase()
+    
+    if (fa < fb) return 1
+    if (fa > fb) return -1
+    return 0
+}
+
+const desc = (a: IMovieData, b: IMovieData) => {
+    const fa = a.name.toLowerCase()
+    const fb = b.name.toLowerCase()
+    
+    if (fa < fb) return -1
+    if (fa > fb) return 1
+    return 0
+}
 
 export const getMovies = createAsyncThunk(
     "movies/get",
@@ -75,7 +93,31 @@ const moviesSlice = createSlice({
     reducers: {
         movieFilter: (state, action) => {
             let filteredMovie = state.movies.filter(movie => movie.name.toLocaleLowerCase().includes(action.payload))
-            state.filteredMovies = filteredMovie
+            if (action.payload) {
+                state.filteredMovies = filteredMovie
+            } else {
+                state.filteredMovies = state.movies
+            }     
+        },
+        movieOrder: (state, action) => {
+            let orderedMovie: IMovieData[] = []
+            if (state.filteredMovies) {
+                orderedMovie = state.filteredMovies
+                if (action.payload === 'asc') {
+                    orderedMovie = orderedMovie.sort((a,b) => asc(a,b))
+                } else if (action.payload === 'desc') {
+                    orderedMovie = orderedMovie.sort((a,b) => desc(a,b))
+                }
+                state.filteredMovies = orderedMovie
+            } else {
+                orderedMovie = state.movies
+                if (action.payload === 'asc') {
+                    orderedMovie = orderedMovie.sort((a,b) => asc(a,b))
+                } else if (action.payload === 'desc') {
+                    orderedMovie = orderedMovie.sort((a,b) => desc(a,b))
+                }
+                state.movies = orderedMovie
+            }
         }
     },
     extraReducers: (builder) => {
@@ -113,6 +155,6 @@ export const selectFilteredMovies = (state: RootState) => state.movies.filteredM
 export const selectMovie = (state: RootState) => state.movies.movie
 export const selectError= (state: RootState) => state.movies.error
 
-export const { movieFilter } = moviesSlice.actions
+export const { movieFilter, movieOrder } = moviesSlice.actions
 
 export default moviesSlice.reducer
