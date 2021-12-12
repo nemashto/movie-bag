@@ -6,12 +6,14 @@ import {IMovieData, IMovieInputData} from "../../common/types/Movie"
 
 export interface MoviesState {
     movies: IMovieData[]
+    filteredMovies: IMovieData[]
     movie: IMovieData
     error: string | undefined
 }
 
 const initialState: MoviesState = {
     movies: [],
+    filteredMovies: [],
     movie: {
         _id: {},
         name: '',
@@ -70,7 +72,12 @@ export const editMovie = createAsyncThunk(
 const moviesSlice = createSlice({
     name: 'movies',
     initialState,
-    reducers: {},
+    reducers: {
+        movieFilter: (state, action) => {
+            let filteredMovie = state.movies.filter(movie => movie.name.toLocaleLowerCase().includes(action.payload))
+            state.filteredMovies = filteredMovie
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getMovies.fulfilled, (state, action: PayloadAction<IMovieData[]>) => {
@@ -102,7 +109,10 @@ const moviesSlice = createSlice({
 })
 
 export const selectMovies = (state: RootState) => state.movies.movies
+export const selectFilteredMovies = (state: RootState) => state.movies.filteredMovies
 export const selectMovie = (state: RootState) => state.movies.movie
 export const selectError= (state: RootState) => state.movies.error
+
+export const { movieFilter } = moviesSlice.actions
 
 export default moviesSlice.reducer

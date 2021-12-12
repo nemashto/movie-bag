@@ -1,8 +1,15 @@
 import React from "react";
 import { Link } from 'react-router-dom'
+import { useAppDispatch } from "../../state/hooks";
+import { movieFilter } from "../../state/movies/moviesSlicer";
 
 
 export const Header = () => {
+    const dispatch = useAppDispatch()
+
+    const filterByInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(movieFilter(e.target.value))
+    }
 
     return (
         <header className="p-3 bg-dark text-white">
@@ -18,7 +25,9 @@ export const Header = () => {
                 </ul>
         
                 <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                    <input type="search" className="form-control form-control-dark" placeholder="Search..." aria-label="Search" />
+                    <input type="search" className="form-control form-control-dark"  onChange={e=> {
+                        filterByInput(e)
+                    }} placeholder="Search..." aria-label="Search"/>
                 </form>
         
                 <div className="text-end">

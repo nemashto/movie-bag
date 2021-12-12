@@ -23,10 +23,6 @@ export const AddMovieForm = (initialValues: IMovieInputData) => {
         return error
     }
 
-    const newForm = () => {
-        setSubmitted(false)
-    }
-
     const saveMovie = (value: IMovieInputData ) => {
         dispatch(createMovie(value))
     }

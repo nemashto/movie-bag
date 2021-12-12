@@ -1,17 +1,26 @@
 import React, {useEffect} from "react";
 import { Movie } from "../../common/components/movie";
+import { IMovieData } from "../../common/types/Movie";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { getMovies, selectError, selectMovies } from "../../state/movies/moviesSlicer";
+import { getMovies, selectError, selectFilteredMovies, selectMovies } from "../../state/movies/moviesSlicer";
 
 
 export const MovieList = () => {
-    const movies = useAppSelector(selectMovies)
+    const movies_store = useAppSelector(selectMovies)
+    const filtered_store = useAppSelector(selectFilteredMovies)
     const error = useAppSelector(selectError)
     const dispatch = useAppDispatch()
+    var movies:IMovieData[] = []
 
     useEffect(() => {
         dispatch(getMovies())
     },[dispatch])
+
+    if (filtered_store.length > 0) {
+        movies = filtered_store
+    } else {
+        movies = movies_store
+    }
 
     return (
         <div>
