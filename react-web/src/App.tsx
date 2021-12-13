@@ -7,6 +7,7 @@ import { Route, Switch } from 'react-router';
 import { AddMovie } from './pages/MoviePages/AddMovie';
 import { DetailMovie } from './pages/MoviePages/DetailMovie';
 import { EditMovie } from './pages/MoviePages/EditMovie';
+import { LoginPage } from './pages/AuthPages/Login';
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
           <Route exact path="/movies/add" component={AddMovie} />
           <Route exact path="/movies/:id" component={DetailMovie} />
           <Route exact path="/movies/edit/:id" component={EditMovie} />
+
+          <Route exact path="/auth/login" component={LoginPage} />
         </Switch>
       </main>
       <Footer />

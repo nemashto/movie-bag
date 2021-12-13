@@ -1,0 +1,116 @@
+
+import React, {useEffect, useState} from "react"
+import { Formik, Form, Field, ErrorMessage } from "formik"
+import * as Yup from "yup"
+
+import { login, selectAuth } from "../../state/auth/authSlicer"
+import { clearedMessage, selectMessage } from "../../state/core/messageSlicer" 
+import { useAppDispatch, useAppSelector } from "../../state/hooks"
+
+export const LoginPage = () => {
+    const [loading, setLoading] = useState(false)
+
+    const { isLoggedIn } = useAppSelector( selectAuth )
+    const { message } = useAppSelector( selectMessage )
+
+    const dispatch = useAppDispatch()
+
+    const initialValues = {
+        email: '',
+        password: ''
+    }
+
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Invalid email format').required('This field is required!'),
+        password: Yup.string().required('This field is required!')
+    })
+
+    interface formData {
+        email: string
+        password: string
+    }
+
+    useEffect(() => {
+        dispatch(clearedMessage())
+    }, [dispatch])
+
+    const handleLogin = (formData: formData) => {
+        setLoading(true)
+
+        dispatch(login(formData))
+            .unwrap()
+            .then(() => {
+                
+            })
+            .catch(() => {
+                setLoading(false)
+            })
+    }
+
+    return (
+        <div id="main-wrapper" className="container">
+            <div className="row justify-content-center">
+                <div className="col-xl-10">
+                    <div className="card border-0">
+                        <div className="card-body p-0">
+                            <div className="row no-gutters">
+                                <div className="col-lg-6">
+                                    <div className="p-5">
+                                        <div className="mb-5">
+                                            <h3 className="h4 font-weight-bold text-theme">Login</h3>
+                                        </div>
+
+                                        <h6 className="h5 mb-0">Welcome back!</h6>
+                                        <p className="text-muted mt-2 mb-5">Enter your email address and password to access admin panel.</p>
+
+                                        <Formik
+                                            initialValues={initialValues}
+                                            validationSchema={validationSchema}
+                                            onSubmit={handleLogin}
+                                        >
+                                            <Form>
+                                                <div className="form-group">
+                                                    <label htmlFor="email">Email address</label>
+                                                    <Field name="email" type="text" className="form-control" />
+                                                    <ErrorMessage
+                                                        name="email"
+                                                        component="div"
+                                                        className="alert alert-danger"
+                                                    />
+                                                </div>
+
+                                                <div className="form-group mb-5">
+                                                    <label htmlFor="password">Password</label>
+                                                    <Field name="password" type="password" className="form-control" />
+                                                    <ErrorMessage
+                                                        name="password"
+                                                        component="div"
+                                                        className="alert alert-danger"
+                                                    />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <button type="submit" className="btn btn-secondary" disabled={loading}>
+                                                    {loading && (
+                                                    <span className="spinner-border spinner-border-sm"></span>
+                                                    )}
+                                                    <span>Login</span>
+                                                </button>
+                                                <div className="forgot-link float-right text-primary mt-2">
+                                                    <a href="#l">Forgot password?</a>
+                                                </div>
+                                            </div>
+
+                                            </Form>
+                                        </Formik>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p className="text-muted text-center mt-3 mb-0">Don't have an account? <a href="register.html" className="text-primary ml-1">register</a></p>
+                </div>
+            </div>
+        </div>
+    )
+}
