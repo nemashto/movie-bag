@@ -2,7 +2,8 @@ from flask import request, Response
 from database.models import Movie, User
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
+from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist, ValidationError, InvalidQueryError
+from resources.errors import SchemaValidationError, MovieAlreadyExistsError, InternalServerError, UpdatingMovieError, DeletingMovieError, MovieNotExistsError
 
 class MoviesApi(Resource):
     def get(self):
@@ -11,15 +12,22 @@ class MoviesApi(Resource):
 
     @jwt_required()
     def post(self):
-        user_id = get_jwt_identity()
-        body = request.get_json()
-        user = User.objects.get(id=user_id)
-        movie = Movie(**body, added_by=user)
-        movie.save()
-        user.update(push__movies=movie)
-        user.save()
-        id = movie.id
-        return {'id': str(id)}, 200
+        try:
+            user_id = get_jwt_identity()
+            body = request.get_json()
+            user = User.objects.get(id=user_id)
+            movie = Movie(**body, added_by=user)
+            movie.save()
+            user.update(push__movies=movie)
+            user.save()
+            id = movie.id
+            return {'id': str(id)}, 200
+        except (FieldDoesNotExist, ValidationError):
+            raise SchemaValidationError
+        except NotUniqueError:
+            raise MovieAlreadyExistsError
+        except Exception as e:
+            raise InternalServerError
 
 
 class MovieApi(Resource):

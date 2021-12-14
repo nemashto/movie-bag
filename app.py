@@ -6,13 +6,15 @@ from flask_jwt_extended import JWTManager
 
 from database.db import initialize_db
 from resources.routes import initialize_routes
+from resources.errors import errors
 
 app = Flask(__name__)
 app.config.from_envvar('ENV_FILE_LOCATION')
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-api = Api(app)
+
+api = Api(app, errors=errors)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 

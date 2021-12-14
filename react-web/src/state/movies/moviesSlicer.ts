@@ -12,6 +12,10 @@ export interface MoviesState {
     error: string | undefined
 }
 
+interface ErrorState {
+    message: string
+}
+
 const initialState: MoviesState = {
     movies: [],
     filteredMovies: undefined,
@@ -60,9 +64,13 @@ export const getMovie = createAsyncThunk(
 
 export const createMovie = createAsyncThunk(
     "movies/create",
-    async ( data: IMovieInputData) => { 
-      const res = await MovieDataService.create(data);
-      return res.data;
+    async ( data: IMovieInputData, thunkAPI) => { 
+        try {
+            const res = await MovieDataService.create(data);
+            return res.data;
+        } catch(err: any) {
+            thunkAPI.dispatch(setMessage(err.response.data.message))
+        }
     }
   )
 
@@ -127,15 +135,16 @@ const moviesSlice = createSlice({
                 state.movies = action.payload
                 state.error = ''          
             })
-            .addCase(getMovies.rejected, (state, action) => {
-                state.error = action.error.message
+            .addCase(getMovies.rejected, (state, action: PayloadAction<any>) => {
+                state.error = action.payload
             })
 
             .addCase(createMovie.fulfilled, (state, action) => {
                 state.error = ''
             })
-            .addCase(createMovie.rejected, (state, action) => {
-                state.error = action.error.message
+            .addCase(createMovie.rejected, (state, action: PayloadAction<any>) => {
+                console.log(action.payload)
+                state.error = action.payload
             })
 
             .addCase(getMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
@@ -145,15 +154,15 @@ const moviesSlice = createSlice({
             .addCase(editMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
                 state.error = ''
             })
-            .addCase(editMovie.rejected, (state) => {
-                state.error = 'You have not permission to edit this movie.'
+            .addCase(editMovie.rejected, (state, action) => {
+                state.error = action.error.message
             })
 
             .addCase(deleteMovie.fulfilled, (state, action) => {
                 state.error = ''
             })
             .addCase(deleteMovie.rejected, (state, action) => {
-                state.error = 'You have not permission to delelete this movie.'
+                state.error = action.error.message
             })
     }
 })

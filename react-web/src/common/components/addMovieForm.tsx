@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { 
     Formik,
     Form,
@@ -7,11 +7,12 @@ import {
 } from "formik"
 import { IMovieInputData } from "../types/Movie";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { createMovie, selectError } from "../../state/movies/moviesSlicer";
+import { createMovie } from "../../state/movies/moviesSlicer";
+import { selectMessage, clearedMessage } from "../../state/core/messageSlicer";
 
 export const AddMovieForm = (initialValues: IMovieInputData) => {
     const [submitted, setSubmitted] = useState(false)
-    const error = useAppSelector(selectError)
+    const { message } = useAppSelector( selectMessage)
     const dispatch = useAppDispatch()
 
     const validate = (value: string) =>{
@@ -24,16 +25,21 @@ export const AddMovieForm = (initialValues: IMovieInputData) => {
     }
 
     const saveMovie = (value: IMovieInputData ) => {
+        dispatch(clearedMessage())
         dispatch(createMovie(value))
     }
+
+    useEffect(() => {
+        dispatch(clearedMessage())
+    },[dispatch])
 
     return(
     <div className="submit-form">
         {submitted &&
           <div>
-            {error ? (
+            {message ? (
                 <div className="alert alert-danger" role="alert">
-                <h4>Something was wrong - try it again</h4>
+                    {message}
                 </div>
             ):(
                 <div className="alert alert-success" role="alert">
