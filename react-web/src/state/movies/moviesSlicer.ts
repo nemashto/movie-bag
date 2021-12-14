@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import MovieDataService from "../../api/movieService"
 import { RootState } from "../store"
 import {IMovieData, IMovieInputData} from "../../common/types/Movie"
+import { setMessage } from "../core/messageSlicer"
 
 
 export interface MoviesState {
@@ -146,6 +147,9 @@ const moviesSlice = createSlice({
             })
             .addCase(deleteMovie.fulfilled, (state, action) => {
                 state.error = ''
+            })
+            .addCase(deleteMovie.rejected, (state, action) => {
+                state.error = 'You have not permission to delelete this movie.'
             })
     }
 })

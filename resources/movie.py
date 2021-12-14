@@ -1,6 +1,7 @@
 from flask import request, Response
 from database.models import Movie
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required
 
 
 class MoviesApi(Resource):
@@ -12,7 +13,7 @@ class MoviesApi(Resource):
         body = request.get_json()
         movie = Movie(**body).save()
         id = movie.id
-        return {'id': str   (id)}, 200
+        return {'id': str(id)}, 200
 
 
 class MovieApi(Resource):
@@ -21,6 +22,7 @@ class MovieApi(Resource):
         Movie.objects.get(id=id).update(**body)
         return '', 200
 
+    @jwt_required()
     def delete(self, id):
         Movie.objects.get(id=id).delete()
         return '', 200
