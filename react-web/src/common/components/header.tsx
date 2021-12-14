@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom'
-import { useAppDispatch } from "../../state/hooks";
+import { logout } from "../../state/auth/authSlicer";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { movieFilter } from "../../state/movies/moviesSlicer";
 
 
@@ -9,6 +10,12 @@ export const Header = () => {
 
     const filterByInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(movieFilter(e.target.value))
+    }
+
+    const { isLoggedIn } = useAppSelector((state) => state.auth)
+
+    const handleLogoutButton  = () => {
+        dispatch(logout())
     }
 
     return (
@@ -31,8 +38,16 @@ export const Header = () => {
                 </form>
         
                 <div className="text-end">
-                    <Link to={"/auth/login"} type="button" className="btn btn-outline-light me-2">Login</Link>
-                    <button type="button" className="btn btn-warning">Sign-up</button>
+                    {isLoggedIn ? (
+                        <div>
+                            <button type="button" className="btn btn-warning" onClick={handleLogoutButton}>Logout</button>
+                        </div>
+                    ):(
+                        <div>
+                            <Link to={"/auth/login"} type="button" className="btn btn-outline-light me-2">Login</Link>
+                            <button type="button" className="btn btn-warning">Sign-up</button>
+                        </div>
+                    )}
                 </div>
             </div>
             </div>

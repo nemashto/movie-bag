@@ -3,17 +3,19 @@ import React, {useEffect, useState} from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 
-import { login, selectAuth } from "../../state/auth/authSlicer"
+import { login } from "../../state/auth/authSlicer"
 import { clearedMessage, selectMessage } from "../../state/core/messageSlicer" 
 import { useAppDispatch, useAppSelector } from "../../state/hooks"
+import { Redirect, useHistory } from "react-router"
 
 export const LoginPage = () => {
     const [loading, setLoading] = useState(false)
 
-    const { isLoggedIn } = useAppSelector( selectAuth )
     const { message } = useAppSelector( selectMessage )
+    const { isLoggedIn } = useAppSelector((state) => state.auth)
 
     const dispatch = useAppDispatch()
+    const history = useHistory()
 
     const initialValues = {
         email: '',
@@ -40,12 +42,17 @@ export const LoginPage = () => {
         dispatch(login(formData))
             .unwrap()
             .then(() => {
-                
+                history.push("/")
+                window.location.reload()
             })
             .catch(() => {
                 setLoading(false)
             })
     }
+
+    if (isLoggedIn) {
+        return <Redirect to="/" />;
+      }
 
     return (
         <div id="main-wrapper" className="container">
@@ -62,6 +69,14 @@ export const LoginPage = () => {
 
                                         <h6 className="h5 mb-0">Welcome back!</h6>
                                         <p className="text-muted mt-2 mb-5">Enter your email address and password to access admin panel.</p>
+
+                                        {message && (
+                                            <div className='form-group'>
+                                                <div className="alert alert-danger" role="alert">
+                                                    {message}
+                                                </div>
+                                            </div>
+                                         )}
 
                                         <Formik
                                             initialValues={initialValues}

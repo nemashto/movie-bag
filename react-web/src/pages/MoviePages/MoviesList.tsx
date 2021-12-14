@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import { Movie } from "../../common/components/movie";
 import { IMovieData } from "../../common/types/Movie";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { getMovies, movieFilter, movieOrder, selectError, selectFilteredMovies, selectMovies } from "../../state/movies/moviesSlicer";
+import { getMovies, movieOrder, selectError, selectFilteredMovies, selectMovies } from "../../state/movies/moviesSlicer";
 
 
 export const MovieList = () => {

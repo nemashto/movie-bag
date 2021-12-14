@@ -1,8 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import authService from "../../api/auth.service"
-import { RootState } from "../store"
+import { AxiosError } from 'axios'
+import { setMessage } from "../core/messageSlicer"
 
 const user = JSON.parse(localStorage.getItem("user") || '{}')
+
+interface ValidationErrors {
+    errorMessage: string
+
+  }
 
 export const login = createAsyncThunk<any, {email:string} & {password: string}>(
     "auth/login",
@@ -11,8 +17,12 @@ export const login = createAsyncThunk<any, {email:string} & {password: string}>(
             const data = await authService.login(email, password)
             return {user: data}
         } catch(error) {
-            console.log(error)
-            return thunkAPI.rejectWithValue(error)
+            let message
+            if (error instanceof Error) message = error.message
+            else message = String(error)
+
+            if (message.endsWith('401') || message.endsWith('500')) message = 'Email or password invalid'
+            thunkAPI.dispatch(setMessage(message))
         }
     }
 )
@@ -25,7 +35,7 @@ export const logout = createAsyncThunk(
 )
 
 // slicer
-const initialState = (user.length > 0)
+const initialState = (user.accessToken)
     ? {isLoggedIn: true, user}
     : {isLoggedIn: false, user: null}
 
@@ -39,9 +49,10 @@ const authSlicer = createSlice({
                 state.isLoggedIn = true
                 state.user = action.payload.user
             })
-            .addCase(login.rejected, (state) => {
+            .addCase(login.rejected, (state, action) => {
                 state.isLoggedIn = false
                 state.user = null
+                console.log(action.payload)
             })
             .addCase(logout.fulfilled, (state, action) => {
                 state.isLoggedIn = false
@@ -49,8 +60,6 @@ const authSlicer = createSlice({
             })
     }
 })
-
-export const selectAuth = (state: RootState) => state.auth
 
 const { reducer } = authSlicer
 export default reducer
