@@ -16,6 +16,7 @@ export const Header = () => {
 
     const handleLogoutButton  = () => {
         dispatch(logout())
+        window.location.reload()
     }
 
     return (

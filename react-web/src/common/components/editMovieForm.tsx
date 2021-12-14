@@ -6,12 +6,14 @@ import {
     FieldArray,
 } from "formik"
 import { IMovieData } from "../types/Movie";
-import { useAppDispatch } from "../../state/hooks";
-import { editMovie } from "../../state/movies/moviesSlicer";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { editMovie, selectError } from "../../state/movies/moviesSlicer";
 
 export const EditMovieForm = (initialValues: IMovieData) => {
     const [submitted, setSubmitted] = useState(false)
     const dispatch = useAppDispatch()
+
+    const error = useAppSelector( selectError )
 
     const validate = (value: string) =>{
         let error: string
@@ -28,6 +30,13 @@ export const EditMovieForm = (initialValues: IMovieData) => {
 
     const saveMovie = (value: IMovieData ) => {
         dispatch(editMovie(value))
+        .unwrap()
+        .then(() => {
+            setSubmitted(true)
+        })
+        .catch(() => {
+            setSubmitted(false)
+        })
     }
 
     return(
@@ -40,11 +49,18 @@ export const EditMovieForm = (initialValues: IMovieData) => {
             </button>
           </div>
         ) : (
+        <div>
+            {error && (
+                <div className='form-group'>
+                    <div className="alert alert-danger" role="alert">
+                        {error}
+                    </div>
+                </div>
+            )}
         <Formik
                 initialValues={initialValues}
                 onSubmit={(values, actions) => {
                     saveMovie(values)
-                    setSubmitted(true)
                     actions.resetForm()
                 }}
             >
@@ -122,6 +138,7 @@ export const EditMovieForm = (initialValues: IMovieData) => {
                     </Form>
                 )}
         </Formik>
+        </div>
         )}
         </div>
     )

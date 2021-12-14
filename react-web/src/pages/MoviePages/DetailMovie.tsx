@@ -27,11 +27,9 @@ export const DetailMovie = () => {
         dispatch(deleteMovie(id))
             .unwrap()
             .then(() => {
-                console.log("yes")
                 setDeleted(true)
             })
             .catch(() => {
-                console.log("no")
                 setDeleted(false)
                 setToDelete(false)
                 setLoading(false)

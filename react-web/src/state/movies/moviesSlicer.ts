@@ -145,6 +145,10 @@ const moviesSlice = createSlice({
             .addCase(editMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
                 state.error = ''
             })
+            .addCase(editMovie.rejected, (state) => {
+                state.error = 'You have not permission to edit this movie.'
+            })
+
             .addCase(deleteMovie.fulfilled, (state, action) => {
                 state.error = ''
             })

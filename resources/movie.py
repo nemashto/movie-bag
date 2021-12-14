@@ -9,6 +9,7 @@ class MoviesApi(Resource):
         movies = Movie.objects().to_json()
         return Response(movies, mimetype="application/json", status='200')
 
+    @jwt_required()
     def post(self):
         body = request.get_json()
         movie = Movie(**body).save()
@@ -17,6 +18,7 @@ class MoviesApi(Resource):
 
 
 class MovieApi(Resource):
+    @jwt_required()
     def put(self, id):
         body = request.get_json()
         Movie.objects.get(id=id).update(**body)

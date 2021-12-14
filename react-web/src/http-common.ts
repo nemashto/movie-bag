@@ -1,11 +1,12 @@
 import axios  from "axios";
-import { authHeader } from "./api/auth-header";
 
-var header = { "Content-type": "application/json",
-                "Authorization": authHeader() }
-
+let token = JSON.parse(localStorage.getItem('user') || '{}').accessToken || 'xxx'
 
 export default axios.create({
     baseURL: 'http://localhost:5000/api',
-    headers: header
+    timeout: 700,
+    headers: { 
+        "Content-type": "application/json",
+        "Authorization": `Bearer ${token}`
+    }
 })
