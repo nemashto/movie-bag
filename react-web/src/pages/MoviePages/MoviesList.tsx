@@ -1,18 +1,20 @@
 import React, {useEffect} from "react";
 import { Movie } from "../../common/components/movie";
 import { IMovieData } from "../../common/types/Movie";
+import { clearedMessage, selectMessage } from "../../state/core/messageSlicer";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { getMovies, movieOrder, selectError, selectFilteredMovies, selectMovies } from "../../state/movies/moviesSlicer";
+import { getMovies, movieOrder, selectFilteredMovies, selectMovies } from "../../state/movies/moviesSlicer";
 
 
 export const MovieList = () => {
     const moviesStore = useAppSelector(selectMovies)
     const filteredStore = useAppSelector(selectFilteredMovies)
-    const error = useAppSelector(selectError)
+    const {message} = useAppSelector(selectMessage)
     const dispatch = useAppDispatch()
     var movies : IMovieData[] = []
 
     useEffect(() => {
+        dispatch(clearedMessage())
         dispatch(getMovies())
     },[dispatch])
 
@@ -32,8 +34,8 @@ export const MovieList = () => {
       
     return (
         <div>
-            {error && <div className="alert alert-danger" role="alert">
-                    Something is wrong. Please try it again later.
+            {message && <div className="alert alert-danger" role="alert">
+                    {message}
                 </div>
             }
             <div className="p-4 p-md-3 mb-4 text-dark rounded bg-white">

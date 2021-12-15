@@ -9,12 +9,8 @@ export interface MoviesState {
     movies: IMovieData[]
     filteredMovies: IMovieData[] | undefined
     movie: IMovieData
-    error: string | undefined
 }
 
-interface ErrorState {
-    message: string
-}
 
 const initialState: MoviesState = {
     movies: [],
@@ -25,7 +21,6 @@ const initialState: MoviesState = {
         casts: [],
         genres: [],
     },
-    error: '',
 } 
 
 const asc = (a: IMovieData, b: IMovieData) => {
@@ -80,15 +75,19 @@ export const createMovie = createAsyncThunk(
 
 export const editMovie = createAsyncThunk(
     "movies/edit",
-    async (movie: IMovieData) => { 
+    async (movie: IMovieData, thunkAPI) => { 
         const id: string = String(Array(Object.values(movie._id))[0])
         let data: IMovieInputData = {
             name: movie.name,
             genres: movie.genres,
             casts: movie.casts,
-        } 
-        const res = await MovieDataService.update(id, data);
-        return res.data;
+        }
+        try {
+            const res = await MovieDataService.update(id, data);
+            return res.data;
+        } catch(err: any) {
+            thunkAPI.dispatch(setMessage(err.response.data.message))
+        }
     }
   )
 
@@ -140,24 +139,19 @@ const moviesSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getMovies.fulfilled, (state, action: PayloadAction<IMovieData[]>) => {
-                state.movies = action.payload
-                state.error = ''          
+                state.movies = action.payload        
             })
-            .addCase(getMovies.rejected, (state, action) => {
-                state.error = action.error.message
-            })
-
             .addCase(createMovie.fulfilled, (state, action) => {
-                state.error = ''
+
             })
             .addCase(getMovieById.fulfilled, (state, action: PayloadAction<any>) => {
                 state.movie = action.payload 
             })
-            .addCase(editMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
-                state.error = ''
+            .addCase(editMovie.fulfilled, (state, action: PayloadAction<any>) => {
+                state.movie = action.payload
             })
             .addCase(deleteMovie.fulfilled, (state) => {
-                state.error = ''
+
             })
     }
 })
@@ -165,7 +159,6 @@ const moviesSlice = createSlice({
 export const selectMovies = (state: RootState) => state.movies.movies
 export const selectFilteredMovies = (state: RootState) => state.movies.filteredMovies
 export const selectMovie = (state: RootState) => state.movies.movie
-export const selectError= (state: RootState) => state.movies.error
 
 export const { movieFilter, movieOrder } = moviesSlice.actions
 
