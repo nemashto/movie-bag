@@ -5,24 +5,15 @@ import { setMessage } from "../core/messageSlicer"
 
 const user = JSON.parse(localStorage.getItem("user") || '{}')
 
-interface ValidationErrors {
-    errorMessage: string
-
-  }
-
 export const login = createAsyncThunk<any, {email:string} & {password: string}>(
     "auth/login",
     async ({email, password}, thunkAPI) => {
         try {
             const data = await authService.login(email, password)
             return {user: data}
-        } catch(error) {
-            let message
-            if (error instanceof Error) message = error.message
-            else message = String(error)
-
-            if (message.endsWith('401') || message.endsWith('500')) message = 'Email or password invalid'
-            thunkAPI.dispatch(setMessage(message))
+        } catch(err: any) {
+            if (err.response.data.message) thunkAPI.dispatch(setMessage(err.response.data.message))
+            else thunkAPI.dispatch(setMessage(err))
         }
     }
 )
@@ -52,7 +43,6 @@ const authSlicer = createSlice({
             .addCase(login.rejected, (state, action) => {
                 state.isLoggedIn = false
                 state.user = null
-                console.log(action.payload)
             })
             .addCase(logout.fulfilled, (state, action) => {
                 state.isLoggedIn = false

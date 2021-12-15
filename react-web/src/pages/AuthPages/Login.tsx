@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 
 import { login } from "../../state/auth/authSlicer"
-import { clearedMessage, selectMessage } from "../../state/core/messageSlicer" 
+import { clearedMessage, selectMessage, setMessage } from "../../state/core/messageSlicer" 
 import { useAppDispatch, useAppSelector } from "../../state/hooks"
 import { Redirect, useHistory } from "react-router"
 
@@ -47,6 +47,7 @@ export const LoginPage = () => {
             })
             .catch(() => {
                 setLoading(false)
+                dispatch(setMessage("Wrong email or password"))
             })
     }
 
