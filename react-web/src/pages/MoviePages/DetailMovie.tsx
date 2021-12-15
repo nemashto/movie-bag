@@ -13,6 +13,7 @@ export const DetailMovie = () => {
     const {id} = useParams<MovieParams>()
     const movie = useAppSelector(selectMovie)
     const { message } = useAppSelector( selectMessage )
+    const { isLoggedIn } = useAppSelector((state) => state.auth)
     const dispatch = useAppDispatch()
     const [toDelete, setToDelete] = useState(false)
 
@@ -53,12 +54,14 @@ export const DetailMovie = () => {
                         <div className="col-lg-6 mx-auto">
                             <p className="lead mb-4"><i> {movie.genres.map((genre, index) => (<b key={index}> {genre} / </b>))} </i></p>
                             <p className="lead mb-4"> {movie.casts.map((actor, index) => (<i key={index}>{actor}, </i>))} </p>
-                            <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                            <Link to={"/movies/edit/" + id} type="button" className="btn btn-primary btn-lg px-4 gap-3">Edit movie</Link>
-                            <button type="button" onClick={() => setToDelete(true)} className="btn btn-outline-secondary btn-lg px-4">
-                                <span>Delete movie </span>
-                            </button>
+
+                            { isLoggedIn && <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                                <Link to={"/movies/edit/" + id} type="button" className="btn btn-primary btn-lg px-4 gap-3">Edit movie</Link>
+                                <button type="button" onClick={() => setToDelete(true)} className="btn btn-outline-secondary btn-lg px-4">
+                                    <span>Delete movie </span>
+                                </button>
                             </div>
+                            }
                         </div>
                     </div>    
                 </div> 
