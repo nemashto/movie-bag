@@ -46,7 +46,7 @@ export const Header = () => {
                     ):(
                         <div>
                             <Link to={"/auth/login"} type="button" className="btn btn-outline-light me-2">Login</Link>
-                            <button type="button" className="btn btn-warning">Sign-up</button>
+                            <Link to={"/auth/registration"} type="button" className="btn btn-warning">Sign-up</Link>
                         </div>
                     )}
                 </div>

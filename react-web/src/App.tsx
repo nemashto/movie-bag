@@ -8,6 +8,7 @@ import { AddMovie } from './pages/MoviePages/AddMovie';
 import { DetailMovie } from './pages/MoviePages/DetailMovie';
 import { EditMovie } from './pages/MoviePages/EditMovie';
 import { LoginPage } from './pages/AuthPages/Login';
+import { RegistrationPage } from './pages/AuthPages/Registration';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route exact path="/movies/edit/:id" component={EditMovie} />
 
           <Route exact path="/auth/login" component={LoginPage} />
+          <Route exact path="/auth/registration" component={RegistrationPage} />
         </Switch>
       </main>
       <Footer />

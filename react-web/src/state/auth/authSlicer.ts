@@ -5,6 +5,20 @@ import { setMessage } from "../core/messageSlicer"
 
 const user = JSON.parse(localStorage.getItem("user") || '{}')
 
+export const regisration = createAsyncThunk(
+    "auth/registration",
+    async (data: {email:string} & {password: string}, thunkAPI) => {
+        try {
+            const {email, password} = data
+            const response = await authService.register(email, password)
+            return {user: response}
+        } catch (err: any) {
+            if (err.response.data.message) thunkAPI.dispatch(setMessage(err.response.data.message))
+            else thunkAPI.dispatch(setMessage(err))
+        }
+    }
+)
+
 export const login = createAsyncThunk<any, {email:string} & {password: string}>(
     "auth/login",
     async ({email, password}, thunkAPI) => {
@@ -36,6 +50,12 @@ const authSlicer = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(regisration.fulfilled, (state, action) => {
+
+            })
+            .addCase(regisration.rejected, (state, action) => {
+
+            })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = true
                 state.user = action.payload.user
