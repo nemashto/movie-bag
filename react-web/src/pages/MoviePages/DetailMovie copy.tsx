@@ -15,6 +15,7 @@ export const DetailMovie = () => {
     const { message } = useAppSelector( selectMessage )
     const dispatch = useAppDispatch()
     const [toDelete, setToDelete] = useState(false)
+    const [deleted, setDeleted] = useState(false)
 
     useEffect(() => {
         dispatch(clearedMessage())
@@ -24,18 +25,19 @@ export const DetailMovie = () => {
     const removeMovie = ()  => {
         setToDelete(false)
         dispatch(deleteMovie(id))
-            .unwrap()
-            .then(() => {
-                    dispatch(getMovieById(id))
-                }
-            )
+        setDeleted(true)
     }
 
     return(
         <div className="px-4 py-5 my-5 text-center">
-            {movie ? (
+            {deleted ? (
+                <div className="alert alert-success" role="alert">
+                    <h4>The movie is already deleted</h4>
+                    <Link to={"/"} className="btn btn-primary" type="button">Ok</Link>
+                </div>  
+            ) : (
                 <div>
-                    {toDelete && (
+                    {movie.name && (
                         <div className="alert alert-secondary" role="alert">
                             <h4>Do you really want delete this movie?</h4>
                             <button className="btn btn-danger" type="button" onClick={removeMovie}>Yes</button>
@@ -49,6 +51,7 @@ export const DetailMovie = () => {
                     )}
 
                     <div>
+                        <img className="d-block mx-auto mb-4" src="" alt="" width="72" height="57" />
                         <h1 className="display-5 fw-bold"> {movie.name} </h1>
                         <div className="col-lg-6 mx-auto">
                             <p className="lead mb-4"><i> {movie.genres.map((genre, index) => (<b key={index}> {genre} / </b>))} </i></p>
@@ -62,12 +65,7 @@ export const DetailMovie = () => {
                         </div>
                     </div>    
                 </div> 
-            ) : (
-                <div className="alert alert-success" role="alert">
-                    <h4>The movie is already deleted</h4>
-                    <Link to={"/"} className="btn btn-primary" type="button">Ok</Link>
-                </div> 
             )}
-        </div>   
+        </div>    
     )
 }

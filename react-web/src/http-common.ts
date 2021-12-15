@@ -1,12 +1,26 @@
 import axios  from "axios";
 
-let token = JSON.parse(localStorage.getItem('user') || '{}').accessToken || 'xxx'
+const getToken = () => {
+    const token = JSON.parse(localStorage.getItem('user') || '{}').accessToken
+    if (token) {
+        return ("Bearer " + token )
+    } else return ''  
+}
 
-export default axios.create({
+const service = axios.create({
     baseURL: 'http://localhost:5000/api',
-    timeout: 700,
-    headers: { 
-        "Content-type": "application/json",
-        "Authorization": `Bearer ${token}`
+    timeout: 700 // request timeout
+});
+  
+  
+service.interceptors.request.use(
+    (config: any) => {
+      config.headers["Authorization"] = getToken()
+      return config;
+    },
+    (error: any) => {
+      Promise.reject(error);
     }
-})
+);
+
+export default service

@@ -54,11 +54,15 @@ export const getMovies = createAsyncThunk(
     }
 )
 
-export const getMovie = createAsyncThunk(
+export const getMovieById = createAsyncThunk(
     "movies/get/id",
-    async(id: string) => {
-        const response = await MovieDataService.get(id)
-        return response.data
+    async(id: string, thunkAPI) => {
+        try {
+            const response = await MovieDataService.get(id)
+            return response.data
+        } catch(err: any) {
+            thunkAPI.dispatch(setMessage(err.response.data.message))
+        }
     }
 )
 
@@ -90,9 +94,13 @@ export const editMovie = createAsyncThunk(
 
   export const deleteMovie = createAsyncThunk(
     "movies/delete",
-    async(id: string) => {
-        const response = await MovieDataService.remove(id)
-        return response.data
+    async(id: string, thunkAPI) => {
+        try {
+            const response = await MovieDataService.remove(id)
+            return response.data
+        } catch(err: any) {
+            thunkAPI.dispatch(setMessage(err.response.data.message))
+        }
     }
 )
 
@@ -135,34 +143,21 @@ const moviesSlice = createSlice({
                 state.movies = action.payload
                 state.error = ''          
             })
-            .addCase(getMovies.rejected, (state, action: PayloadAction<any>) => {
-                state.error = action.payload
+            .addCase(getMovies.rejected, (state, action) => {
+                state.error = action.error.message
             })
 
             .addCase(createMovie.fulfilled, (state, action) => {
                 state.error = ''
             })
-            .addCase(createMovie.rejected, (state, action: PayloadAction<any>) => {
-                console.log(action.payload)
-                state.error = action.payload
-            })
-
-            .addCase(getMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
+            .addCase(getMovieById.fulfilled, (state, action: PayloadAction<any>) => {
                 state.movie = action.payload 
-                state.error = ''       
             })
             .addCase(editMovie.fulfilled, (state, action: PayloadAction<IMovieData>) => {
                 state.error = ''
             })
-            .addCase(editMovie.rejected, (state, action) => {
-                state.error = action.error.message
-            })
-
-            .addCase(deleteMovie.fulfilled, (state, action) => {
+            .addCase(deleteMovie.fulfilled, (state) => {
                 state.error = ''
-            })
-            .addCase(deleteMovie.rejected, (state, action) => {
-                state.error = action.error.message
             })
     }
 })

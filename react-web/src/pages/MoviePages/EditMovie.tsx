@@ -2,7 +2,7 @@ import React, {useEffect} from "react"
 import { useParams } from 'react-router'
 import { EditMovieForm } from "../../common/components/editMovieForm"
 import { useAppDispatch, useAppSelector } from "../../state/hooks"
-import { getMovie, selectMovie } from "../../state/movies/moviesSlicer"
+import { getMovieById, selectMovie } from "../../state/movies/moviesSlicer"
 
 type MovieParams = {
     id: string
@@ -14,7 +14,7 @@ export const EditMovie = () => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(getMovie(id))
+        dispatch(getMovieById(id))
     },[dispatch, id])
     
 

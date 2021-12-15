@@ -26,6 +26,8 @@ class MoviesApi(Resource):
             raise SchemaValidationError
         except NotUniqueError:
             raise MovieAlreadyExistsError
+        except NoAuthorizationError:
+            raise SchemaValidationError
         except Exception as e:
             raise InternalServerError
 
@@ -33,19 +35,37 @@ class MoviesApi(Resource):
 class MovieApi(Resource):
     @jwt_required()
     def put(self, id):
-        user_id = get_jwt_identity()
-        movie = Movie.objects.get(id=id, added_by=user_id)       
-        body = request.get_json()
-        movie.update(**body)
-        return '', 200
+        try:
+            user_id = get_jwt_identity()
+            movie = Movie.objects.get(id=id, added_by=user_id)       
+            body = request.get_json()
+            movie.update(**body)
+            return '', 200
+        except InvalidQueryError:
+            raise SchemaValidationError
+        except DoesNotExist:
+            raise UpdatingMovieError
+        except Exception:
+            raise InternalServerError
 
     @jwt_required()
     def delete(self, id):
-        user_id = get_jwt_identity()
-        movie = Movie.objects.get(id=id, added_by=user_id)
-        movie.delete()
-        return '', 200
+        try:
+            user_id = get_jwt_identity()
+            movie = Movie.objects.get(id=id, added_by=user_id)
+            movie.delete()
+            return '', 200
+        except DoesNotExist:
+            raise DeletingMovieError
+        except Exception:
+            raise InternalServerError
 
     def get(self, id):
-        movie = Movie.objects.get(id=id).to_json()
-        return Response(movie, mimetype="application/json", status='200')
+        try:
+            movie = Movie.objects.get(id=id).to_json()
+            return Response(movie, mimetype="application/json", status='200')
+        except DoesNotExist:
+            raise MovieNotExistsError
+        except Exception:
+            raise InternalServerError
+        

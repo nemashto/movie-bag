@@ -22,6 +22,9 @@ class EmailAlreadyExistsError(Exception):
 class UnauthorizedError(Exception):
     pass
 
+class NoAccessError(Exception):
+    pass
+
 errors = {
     "InternalServerError": {
         "message": "Something went wrong",
@@ -53,6 +56,10 @@ errors = {
      },
      "UnauthorizedError": {
          "message": "Invalid username or password",
+         "status": 401
+     },
+     "NoAccessError": {
+         "message": "You are not logged on.",
          "status": 401
      }
 }
