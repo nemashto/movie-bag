@@ -22,9 +22,5 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 # init
-app.config['MONGODB_SETTINGS'] = {
-    'host': 'mongodb://localhost/movie-bag'
-}
-
 initialize_db(app)
 initialize_routes(api)
