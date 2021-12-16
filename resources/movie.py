@@ -52,7 +52,11 @@ class MovieApi(Resource):
     def delete(self, id):
         try:
             user_id = get_jwt_identity()
+            if not user_id:
+                raise DeletingMovieError
             movie = Movie.objects.get(id=id, added_by=user_id)
+            if not movie:
+                raise DeletingMovieError
             movie.delete()
             return '', 200
         except DoesNotExist:
