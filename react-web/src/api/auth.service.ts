@@ -19,10 +19,20 @@ const logout = () => {
     localStorage.clear()
 }
 
+const forgotPassword = (email: string) => {
+    return http.post("/auth/forgot", {email})
+}
+
+const resetPassword = (password: string, reset_token: string) => {
+    return http.post("/auth/reset", {password, reset_token})
+}
+
 const authService = {
     register,
     login,
-    logout
+    logout,
+    forgotPassword,
+    resetPassword
 }
 
 export default authService

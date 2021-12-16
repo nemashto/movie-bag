@@ -114,7 +114,7 @@ export const LoginPage = () => {
                                                     <span>Login</span>
                                                 </button>
                                                 <div className="forgot-link float-right text-primary mt-2">
-                                                    <a href="#l">Forgot password?</a>
+                                                    <Link to={"/auth/forget"}>Forgot password?</Link>
                                                 </div>
                                             </div>
 

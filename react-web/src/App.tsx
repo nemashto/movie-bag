@@ -9,6 +9,8 @@ import { DetailMovie } from './pages/MoviePages/DetailMovie';
 import { EditMovie } from './pages/MoviePages/EditMovie';
 import { LoginPage } from './pages/AuthPages/Login';
 import { RegistrationPage } from './pages/AuthPages/Registration';
+import { ForgetPage } from './pages/AuthPages/Forget';
+import { ResetPage } from './pages/AuthPages/Reset';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
 
           <Route exact path="/auth/login" component={LoginPage} />
           <Route exact path="/auth/registration" component={RegistrationPage} />
+          <Route exact path="/auth/forget" component={ForgetPage} />
+          <Route exact path="/auth/reset/:reset_token" component={ResetPage} />
         </Switch>
       </main>
       <Footer />

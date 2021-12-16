@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import authService from "../../api/auth.service"
-import { AxiosError } from 'axios'
 import { setMessage } from "../core/messageSlicer"
 
 const user = JSON.parse(localStorage.getItem("user") || '{}')
@@ -36,6 +35,32 @@ export const logout = createAsyncThunk(
     "auth/logout",
     async () => {
         await authService.logout()
+    }
+)
+
+export const forgot = createAsyncThunk(
+    "auth/forgot",
+    async (email: string, thunkAPI) => {
+        try {
+            const response = await authService.forgotPassword(email)
+            return response
+        } catch(err: any) {
+            if (err.response.data.message) thunkAPI.dispatch(setMessage(err.response.data.message))
+            else thunkAPI.dispatch(setMessage(err))
+        }
+    }
+)
+
+export const reset = createAsyncThunk<any, {password:string} & {reset_token: string}>(
+    "auth/forgot",
+    async ({password, reset_token}, thunkAPI) => {
+        try {
+            const response = await authService.resetPassword(password, reset_token)
+            return response
+        } catch(err: any) {
+            if (err.response.data.message) thunkAPI.dispatch(setMessage(err.response.data.message))
+            else thunkAPI.dispatch(setMessage(err))
+        }
     }
 )
 
